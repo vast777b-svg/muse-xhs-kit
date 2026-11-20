@@ -32,9 +32,12 @@ echo ">>> 安装 skills"
 SKILL_DIR="${HOME}/.claude/skills"
 mkdir -p "$SKILL_DIR"
 
-for s in xhs-compliance-check xhs-title-optimizer xhs-viral-remix; do
+SKILLS="xhs-compliance-check xhs-title-optimizer xhs-viral-remix
+xhs-knowledge-base xhs-topic-ideas xhs-account-audit
+xhs-card-render xhs-multi-platform xhs-daily-digest"
+
+for s in $SKILLS; do
   if [ -d "$SKILL_DIR/$s" ]; then
-    warn "$s 已存在，覆盖"
     rm -rf "$SKILL_DIR/$s"
   fi
   cp -R "skills/$s" "$SKILL_DIR/$s"
@@ -50,13 +53,9 @@ else
 fi
 echo
 
-# ---------- 2. 建工作目录 ----------
-echo ">>> 建立工作目录"
-mkdir -p ~/xhs/{drafts,patterns,output}
-cp -R patterns/. ~/xhs/patterns/ 2>/dev/null || true
-info "~/xhs/drafts    — 文案草稿"
-info "~/xhs/patterns  — 爆款拆解记录"
-info "~/xhs/output    — 生成的图"
+# ---------- 2. 建工作目录 + 知识库 ----------
+echo ">>> 建立工作目录与知识库"
+python3 "$SKILL_DIR/xhs-knowledge-base/scripts/kb.py" init
 echo
 
 # ---------- 3. 可选：自动发布 ----------
@@ -116,11 +115,22 @@ echo "  skills （在 ${SKILL_DIR}）:"
 echo "    xhs-compliance-check   违规词检测"
 echo "    xhs-title-optimizer    标题优化"
 echo "    xhs-viral-remix        爆款拆解与仿写"
+echo "    xhs-knowledge-base     本地知识库"
+echo "    xhs-topic-ideas        选题生成与评分"
+echo "    xhs-account-audit      账号体检与复盘"
+echo "    xhs-card-render        3:4 图文卡片渲染"
+echo "    xhs-multi-platform     多平台改写"
+echo "    xhs-daily-digest       每日简报与定时"
 echo
-echo "  工作目录: ~/xhs/"
+echo "  知识库: ~/xhs/"
+echo "  下一步: 填 ~/xhs/persona.md（人设决定所有文案语气）"
 echo
 echo "马上试一下："
 echo "  python3 $SKILL_DIR/xhs-compliance-check/scripts/check.py \"这款面膜全网第一，加微信领取\""
+echo "  python3 $SKILL_DIR/xhs-daily-digest/scripts/digest.py"
+echo
+warn "xhs-card-render 需要 playwright："
+warn "  pip install playwright && playwright install chromium"
 echo
 if [ "$WITH_PUBLISH" -eq 0 ]; then
   warn "自动发布未安装。需要的话：bash install.sh --with-publish"

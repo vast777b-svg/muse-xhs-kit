@@ -70,7 +70,7 @@ echo "文案" | python3 <本skill目录>/scripts/check.py -
 帮我装一套小红书 skill。从我的 GitHub 仓库拉，装完自检。
 
 1. 克隆：
-   git clone https://github.com/<你的用户名>/muse-xhs-kit.git ~/muse-xhs-kit
+   git clone https://github.com/vast777b-svg/muse-xhs-kit.git ~/muse-xhs-kit
 
 2. 进目录跑安装脚本：
    cd ~/muse-xhs-kit && bash install.sh
